@@ -143,7 +143,7 @@ Es una función de la muestra aleatoria, $T=f\left(X_{1}, X_{2}, ... , X_{n}\rig
 	
 Ejemplo:
 
-1. Media muestral: $\bar{X} =\frac{\sum_{j=1}^n{{X}_j}}{n}$
+1. Media muestral: $\bar{X} =\frac{\sum_{j=1}^n{ {X}_j } }{n}$
 
 Se sabe que $E\left(\bar{X}\right)=\mu$ y $Var\left(\bar{X}\right)=\frac{\sigma^2}{n}$, donde $\mu$ y $\sigma^2$ son la media y variancia poblacional. La distribución de $\bar{X}$ va a depender de la distribución de la población. No obstante, con muestras grandes podemos hacer uso del Teorema del Límite Central, el cual dice:
 
