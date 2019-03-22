@@ -1,0 +1,129 @@
+---
+title: "Proyecto 1"
+author: "XS3310 - Marcela Alfaro Córdoba"
+date: "3/13/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estimadores para los parámetros de una regresión lineal
+
+Sea una regresión lineal $Y=X\beta+\epsilon$, donde $\epsilon \sim iid N(0, \sigma^2)$. Nos interesa estimar los parámetros $\beta$ y $\sigma^2$. El objetivo de este proyecto es que Ud diseñe y lleve a cabo un estudio de Monte Carlo (simulación) para demostrar que el estimador máximo verosímil para $\beta$ y $\sigma^2$ son los mejores estimadores, es decir, que cumplen con tres propiedades deseables de un estimador: insesgado, eficiente y consistente.
+
+## Simulación o Estudio de Monte Carlo
+
+Aquí vamos a ennumerar cada paso de una simulación, y explicar los principios de cada una. Pueden ver este [repaso](https://www.researchgate.net/publication/329488175_Simulation_in_R_Concepts_and_Applications).
+
+
+### Primera Etapa:
+
+* Paso 1. Defina el objetivo de su estudio
+
+Comparar las propiedades de 2 estimadores para $\beta$ y $\sigma^2$, respectivamente.
+
+* Paso 2. Escriba el modelo teórico y los supuestos que utilizará para generar los datos.
+
+$Y=X\beta+\epsilon$, donde $\epsilon \sim iid N(0, \sigma^2)$
+
+Además, vamos a generar a X como una columna de 1 (intercepto) y una columna generada con una distribución Gamma. Además, $\beta = (5,-2)$
+
+```{r}
+set.seed(16)
+gen_fun <- function(nrep = 100, beta = c(5,-2), sigma = 2) {
+     X <- cbind(rep(1,nrep),rgamma(nrep,1,1))
+     e <- rnorm(nrep, 0, sigma)
+     Y <- X%*%beta + e
+     return(cbind(Y,X))
+}
+```
+
+* Paso 3. Especifique los tratamientos.
+Vamos a comparar dos estimadores para cada parámetro, con los mismos datos:
+
+El primer set son los estimadores que Uds ya conocen:
+
+```{r eval=FALSE}
+beta_hat_0 <- solve(t(X)%*%X)%*%t(X)%*%Y
+S2_0       <- t(Y-X%*%b)%*%(Y-X%*%b)/(n-p)
+```
+
+El segundo son estimadores con cierta variación:
+
+```{r eval=FALSE}
+beta_hat_A <- solve(t(X-mean(X))%*%(X-mean(X)))%*%
+                    t(X-mean(X))%*%(Y-mean(Y))
+S2_A       <- t(Y-X%*%b)%*%(Y-X%*%b)/(n)
+```
+
+* Paso 4. Especifique los criterios o medidas de comparación empírica
+
+Sesgo y variancia mínima
+
+### Segunda Etapa: Genere los datos utilizando el modelo teórico
+
+```{r}
+data <- replicate(n = 1000,gen_fun(), simplify = FALSE )
+```
+
+### Tercera Etapa: Calcule el estimador para cada tratamiento.
+
+```{r}
+library(purrr) 
+
+cal_fun <- function(dat) {
+    Y <- dat[,1]
+    X <- dat[,-1]
+    n <- dim(dat)[1]
+    bh_0  <- solve(t(X)%*%X)%*%t(X)%*%Y
+    S2_0  <- sum((Y-X%*%bh_0)^2)/(n-2)
+    bh_A  <- solve(t(X-mean(X))%*%(X-mean(X)))%*%
+                   t(X-mean(X))%*%(Y-mean(Y))
+    S2_A  <- sum(((Y-mean(Y))-(X-mean(X))%*%bh_A)^2)/(n)
+   return(c(beta_hat_0=bh_0[1],
+                beta_hat_1=bh_0[2],
+                beta_alt_0=bh_A[1],
+                beta_alt_1=bh_A[2],
+                S2_0= S2_0, 
+                S2_A= S2_A))
+}
+
+results <- map(data, cal_fun)
+length(results)
+length(results[[1]])
+names(results[[1]])
+```
+
+### Cuarta Etapa: Resuma y presente los resultados.
+
+```{r}
+res <- do.call(rbind, results)
+summary(res)
+```
+
+## Su trabajo consiste en llevar a cabo los siguientes puntos:
+
+1. Redacte de manera clara y concisa el objetivo del estudio de Monte Carlo, definiendo matemáticamente los estimadores que quiere comparar. (10pts)
+
+2. Presente los resultados de la simulación (tal como está planteada) en una tabla resumida, incluyendo medidas de variabilidad para cada estimación que esté haciendo. Si la tabla no comunica (al menos) una respuesta al objetivo de su estudio, entonces perderá los puntos. (15pts). NOTA: Ud puede modificar la simulación, sin embargo, lo que pide esta pregunta es que utilice el código que ya está escrito para tratar de responder (al menos uno de) sus objetivos. 
+
+3. ¿Es posible comprobar las tres propiedades de un estimador: insesgado, eficiente y consistente, por medio de la simulación propuesta? especifique por qué si o por qué no. (15pts, 5 por cada propiedad)
+
+4. Describa brevemente cómo diseñaría una simulación que compruebe de mejor forma las propiedades de los estimadores. (10pts)
+
+TOTAL: 50 puntos, NOTA: 5$\%$
+
+## Recomendaciones para la entrega:
+
+a. Solo debe entregar las respuestas a las preguntas 1,2,3, y 4. El formato recomendado para la elaboración es .Rmd, pero se acepta cualquier otro formato de elaboración siempre y cuando el resultado (entregable) sea un archivo .pdf y este sea LEGIBLE. Además, si su respuesta no es clara y no hay evidencia de cómo lo hizo (o no es comprensible), no podemos darle puntos parciales. 
+
+b. Recuerde que Ud está entregando un reporte con un mensaje, asegúrese de dejar claro ese mensaje y responder la pregunta de su objetivo.
+
+c. Puede adjuntar el código que utilizó como anexo. 
+
+d. El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber dos respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.
+
+e. La fecha de entrega es el viernes 5 de abril a las 9am. Ese día **NO** hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo. 
+
