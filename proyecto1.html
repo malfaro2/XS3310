@@ -217,12 +217,12 @@ gen_fun &lt;- function(nrep = 100, beta = c(5,-2), sigma = 2) {
      return(cbind(Y,X))
 }</code></pre>
 <ul>
-<li>Paso 3. Especifique los tratamientos. Vamos a comparar dos estimadores para cada parámetro, con los mismos datos:</li>
+<li>Paso 3. Especifique los tratamientos (en este caso distintos estimadores). Vamos a comparar dos estimadores para cada parámetro, con los mismos datos:</li>
 </ul>
 <p>El primer set son los estimadores que Uds ya conocen:</p>
 <pre class="r"><code>beta_hat_0 &lt;- solve(t(X)%*%X)%*%t(X)%*%Y
 S2_0       &lt;- t(Y-X%*%b)%*%(Y-X%*%b)/(n-p)</code></pre>
-<p>El segundo son estimadores con cierta variación:</p>
+<p>El segundo son estimadores con pequeños ajustes:</p>
 <pre class="r"><code>beta_hat_A &lt;- solve(t(X-mean(X))%*%(X-mean(X)))%*%
                     t(X-mean(X))%*%(Y-mean(Y))
 S2_A       &lt;- t(Y-X%*%b)%*%(Y-X%*%b)/(n)</code></pre>
@@ -300,9 +300,9 @@ summary(res)</code></pre>
 <ol style="list-style-type: lower-alpha">
 <li><p>Solo debe entregar las respuestas a las preguntas 1,2,3, y 4. El formato recomendado para la elaboración es .Rmd, pero se acepta cualquier otro formato de elaboración siempre y cuando el resultado (entregable) sea un archivo .pdf y este sea LEGIBLE. Además, si su respuesta no es clara y no hay evidencia de cómo lo hizo (o no es comprensible), no podemos darle puntos parciales.</p></li>
 <li><p>Recuerde que Ud está entregando un reporte con un mensaje, asegúrese de dejar claro ese mensaje y responder la pregunta de su objetivo.</p></li>
-<li><p>Puede adjuntar el código que utilizó como anexo.</p></li>
-<li><p>El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber dos respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.</p></li>
-<li><p>La fecha de entrega es el viernes 5 de abril a las 9am. Ese día <strong>NO</strong> hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo.</p></li>
+<li><p>Puede adjuntar el código que utilizó como anexo (este paso es recomendado, para asegurar reproducibilidad y transparencia).</p></li>
+<li><p>El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.</p></li>
+<li><p>La fecha de entrega es el viernes 5 de abril a las 9am vía Mediación Virtual. No se aceptarán trabajos por correo electrónico, ni por cualquier otro medio. Ese día <strong>NO</strong> hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo.</p></li>
 </ol>
 </div>
 

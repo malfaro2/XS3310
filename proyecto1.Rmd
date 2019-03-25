@@ -40,7 +40,7 @@ gen_fun <- function(nrep = 100, beta = c(5,-2), sigma = 2) {
 }
 ```
 
-* Paso 3. Especifique los tratamientos.
+* Paso 3. Especifique los tratamientos (en este caso distintos estimadores).
 Vamos a comparar dos estimadores para cada parámetro, con los mismos datos:
 
 El primer set son los estimadores que Uds ya conocen:
@@ -50,7 +50,7 @@ beta_hat_0 <- solve(t(X)%*%X)%*%t(X)%*%Y
 S2_0       <- t(Y-X%*%b)%*%(Y-X%*%b)/(n-p)
 ```
 
-El segundo son estimadores con cierta variación:
+El segundo son estimadores con pequeños ajustes:
 
 ```{r eval=FALSE}
 beta_hat_A <- solve(t(X-mean(X))%*%(X-mean(X)))%*%
@@ -121,9 +121,9 @@ a. Solo debe entregar las respuestas a las preguntas 1,2,3, y 4. El formato reco
 
 b. Recuerde que Ud está entregando un reporte con un mensaje, asegúrese de dejar claro ese mensaje y responder la pregunta de su objetivo.
 
-c. Puede adjuntar el código que utilizó como anexo. 
+c. Puede adjuntar el código que utilizó como anexo (este paso es recomendado, para asegurar reproducibilidad y transparencia). 
 
-d. El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber dos respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.
+d. El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.
 
-e. La fecha de entrega es el viernes 5 de abril a las 9am. Ese día **NO** hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo. 
+e. La fecha de entrega es el viernes 5 de abril a las 9am vía Mediación Virtual. No se aceptarán trabajos por correo electrónico, ni por cualquier otro medio. Ese día **NO** hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo. 
 
