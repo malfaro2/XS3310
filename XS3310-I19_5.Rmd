@@ -176,7 +176,19 @@ Supongamos que para este caso si quisieramos saber cuál sería un estadístico 
 
 ---
 
-### Ejercicios:
+# Notas:
+
+* Ejercicios propuestos: 8.1 - 8.20, 9.1 - 9.8, 9.9 - 9.36, 9.37 - 9.55, 9.56 - 9.68 de Mendenhall
+
+* Horas consulta esta semana: martes 1-5pm.
+
+* Horas consulta la próxima semana: el línea, vía Slack, en cualquier momento. Yo responderé los mensajes por la noche.
+
+* Otros ejercicios serán posteados el viernes. 
+
+---
+
+# Ejercicios
 
 1. Una variable $X$ se distribuye como una $\chi^2_{\kappa}$. Considere un estadístico $T$ que usa la información contenida en una muestra aleatoria $X_1, ..., X_n$. Si $T(X) = 2 \bar{X} -1$, calcule el error cuadrático medio de $T(X)$, y defina si es o no un estimador consistente.
 
