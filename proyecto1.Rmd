@@ -1,7 +1,7 @@
 ---
 title: "Proyecto 1"
 author: "XS3310 - Marcela Alfaro Córdoba"
-date: "3/13/2019"
+date: "3/13/2019 (updated: `r Sys.Date()`)"
 output: html_document
 ---
 
