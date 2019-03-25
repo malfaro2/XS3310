@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>XS3310 Teoría Estadística</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Prof. Marcela Alfaro Córdoba" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# XS3310 Teoría Estadística
+## I Semestre 2019
+### Prof. Marcela Alfaro Córdoba
+### 3/05/2018 (updated: 2019-03-25)
+
+---
+
+
+
+
+
+class: center, middle
+
+# ¿Qué hemos visto hasta ahora?
+
+Muestra aleatoria. Parámetros, estadísticos y estimadores. Repaso de estadísticos de orden. Estimación puntual. Repaso de distribuciones muestrales. Sesgo y error cuadrático medio. Evaluación de la bondad de un estimador puntual.
+Propiedades de los estimadores: insesgamiento, eficiencia, consistencia. Ejemplos. Teorema de factorización. Familias de distribuciones Potencial, Pareto. Estimadores insesgados de variancia
+mínima. Desigualdad de Cramer-Rao. Información de Fisher. 
+
+# ¿Qué vamos a discutir hoy?
+
+Proyecto 1. Propiedades de los estimadores puntuales: **suficiencia**. Teorema de factorización, familia exponencial.
+
+---
+class: inverse,s center, middle
+
+# Proyecto 1
+
+https://malfaro2.github.io/XS3310/proyecto1.html
+
+
+
+---
+
+# Suficiencia
+	
+Hasta el momento la selección de estimadores ha sido intuitiva, sin embargo en esta sección utilizaremos la propiedad de suficiencia para determinar estimadores a partir de ciertos estadísticos. Se dice que un estadístico es suficiente si **hace uso de toda la información de la muestra**. Ejemplos: `\(\overline{X}, S^{2}, X_{(n)}\)`.
+	
+&gt; Definición 1.11. Suficiencia minima. Si `\(X_{1}, X_{2}, ... , X_{n}\)` es una muestra aleatoria sobre una población con parámetro desconocido `\(\theta\)` y función de densidad/probabilidad `\(f_{X}(x|\theta)\)`. Se dice que un estadístico `\(U = g(X_{1}, X_{2}, ... , X_{n})\)` es **suficiente mínimo** para estimar `\(\theta\)` si la distribución condicional de `\(X_{1}, X_{2}, ... , X_{n}\)` dado `\(U=u\)` es independiente de `\(\theta\)`. 
+
+---
+
+# Suficiencia
+
+De otra forma, se puede decir que un estadístico `\(U = T(X_{1}, X_{2}, ... , X_{n})\)`, de una muestra aleatoria `\(X_{1}, X_{2}, ... , X_{n}\)`, es suficiente mínimo para estimar `\(\theta\)` si no se puede encontrar otro estadístico que realice una mejor reducción de los datos que la que realiza `\(U\)`. Es decir, el estadístico suficiente mínimo logra **explicar toda la información del parámetro que se presenta en la muestra aleatoria**.
+	
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria tal que `\(X_{j} \sim Bernoulli(p)\)`. Pruebe que `\(U = \sum_{j=1}^{n} X_{j}\)` es suficiente para estimar `\(p\)`.
+	
+Solución. Sabemos que la función de probabilidad de una Bernoulli viene dada por la siguiente expresión:
+	
+`\(f_{X}(x|p) = \begin{cases} p^{x}\left(1-p\right)^{1-x} \quad si \quad x \in \left\lbrace 0,1\right\rbrace  \\ 0 \quad en \quad otros \quad casos \end{cases}\)`
+	
+También sabemos de antemano que la suma de Bernoulli es una Binomial, por lo que `\(U \sim Bin(n,p)\)`, por lo que tiene la siguiente función de probabilidad:
+	
+`\(f_{U}(u|p) = \begin{cases} \binom{n}{u}p^{u}\left(1-p\right)^{n-u} \quad si \quad u \in \left\lbrace0,1,2,...,n\right\rbrace \\ 0 \quad en \quad otros \quad casos \end{cases}\)`
+	
+---
+
+# Suficiencia
+
+Ahora tenemos que encontrar la función de probabilidad condicional de `\(X_{1}, X_{2}, ... , X_{n}\)` dado `\(U=u\)`, que por lo visto en cursos anteriores sabemos que es:
+	
+`\(f(x_{1}, ... , x_{n} | U = u) = \frac{f(x_{1}, ... , x_{n}, u)}{f_{U}(u)}\)`
+
+En este caso el numerador es la función de probabilidad conjunta de `\(X_{1}, X_{2}, ... , X_{n}\)` y `\(U\)`, pero al estar este en términos de toda la muestra aleatoria entonces quedamos con solo la función de probabilidad conjunta de `\(X_{1}, X_{2}, ... , X_{n}\)`, `\(f(x_{1}, ... , x_{n})\)`. Recordemos que bajo independencia `\(f(x_{1}, ... , x_{n}) = \prod_{j=1}^{n}f_{X_{j}}(x_{j}|p)\)`. Esta función también lleva el nombre de **función de verosimilitud** y se denota como `\(\mathcal{L}(x_{1}, ... , x_{n}|p)\)` o también solo como `\(\mathcal{L}(p)\)`. 
+	
+`\(\mathcal{L}(x_{1}, ... , x_{n}|p) =  \prod_{j=1}^{n} p^{x_{j}}\left(1-p\right)^{1-x_{j}}= p^{\sum_{j=1}^{n}x_{j}}\left(1-p\right)^{n-\sum_{j=1}^{n}x_{j}} = p^{u}\left(1-p\right)^{n-u}\)`
+
+
+---
+
+# Suficiencia
+
+Por lo tanto, `\(f(x_{1}, ... , x_{n} | U = u) = \frac{p^{u}\left(1-p\right)^{n-u}}{\binom{n}{u}p^{u}\left(1-p\right)^{n-u}} = \frac{1}{\binom{n}{u}}\)`
+	
+Como vemos, esta función condicional no depende de `\(p\)`, por lo que decimos que `\(U\)` es suficiente para estimar `\(p\)`. 
+
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria de una población Uniforme en el intervalo `\((0,\theta)\)`. Demuestre que el máximo muestral es un estimador suficiente para `\(\theta\)`. 
+	
+Solución. Ya habiamos demostrado con anterioridad que para este caso `\(U = X_{(n)} \sim Potencial(n,\theta)\)`, por lo que conocemos su función de densidad:
+
+`\(f_{U}(u) = \frac{nu^{n-1} }{\theta^n}\)`
+	
+Con esto podemos encontrar la función de densidad marginal:
+	
+`\(f(x_{1}, ... , x_{n} | U = u) = \frac{\theta^{-n}}{\frac{nu^{n-1}}{\theta^n}} = \frac{1}{nu^{n-1}}\)`
+	
+Como esta expresión no depende de `\(\theta\)` entonces decimos que el máximo muestral es suficiente para estimar `\(\theta\)`. 
+
+---
+
+# Técnicas para demostrar suficiencia
+	
+&gt; Teorema 1.26. Técnica de factorización. Si `\(U\)` es un estadístico definido sobre una muestra aleatoria `\(X_{1}, X_{2}, ... , X_{n}\)` de una población con parámetro desconocido `\(\theta\)` y `\(\mathcal{L}(X_{1}, X_{2}, ... , X_{n}|\theta) = \mathcal{L}(\theta)\)` es la función de verosimilitud entonces `\(U\)` es suficiente para `\(\theta\)` si y solo si existen funciones `\(g(u,\theta)\)` y `\(h(x_{1}, x_{2}, ... , x_{n})\)` tal que `\(\mathcal{L}(\theta) = g(u,\theta) \cdot h(x_{1}, x_{2}, ... , x_{n})\)` donde `\(g(\cdot)\)` depende de `\(X_{1}, X_{2}, ... , X_{n}\)` solo por medio de `\(U\)` y `\(h(\cdot)\)` no depende de `\(\theta\)`. 
+
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria tal que `\(X_{j} \sim Bernoulli(p)\)`. Pruebe que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente mínimo para `\(p\)`. 
+
+Solución. En el caso de una muestra aleatoria Bernoulli, su función de verosimilitud viene dada por
+	
+`\(\mathcal{L}(p) = \prod_{j=1}^{n} p^{x_{j}}\left(1-p\right)^{1-x_{j}} = p^{\sum x_{j}}\left(1-p\right)^{n-\sum x_{j}} = p^{u}\left(1-p\right)^{n-u}\)`
+	
+Si tomamos `\(g(u,p) = p^{u}\left(1-p\right)^{n-u}\)` y `\(h(x_{1}, x_{2}, ... , x_{n}) = 1\)` podemos ver que se cumple el teorema anterior por lo que queda demostrado que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente mínimo para `\(p\)`.
+---
+
+# Suficiencia
+
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria de una población Poisson con media `\(\lambda\)`. Encuentre un estadístico suficiente mínimo para `\(\lambda\)`. 
+	
+Solución. Primero debemos encontrar la función de verosimilitud para una muestra aleatoria Poisson,
+	
+`\(\mathcal{L}(\lambda) = \prod_{j=1}^{n} \frac{\lambda^{x_{j}}e^{-\lambda}}{x_{j}!} = \frac{\lambda^{\sum x_{j}}e^{-n\lambda}}{\prod x_{j}! }\)`
+
+Si tomamos `\(U = \sum_{j=1}^{n} X_{j}\)` entonces podemos observar que `\(g(u,\lambda) = \lambda^{u} e^{-n\lambda}\)` y `\(h(x_{1}, x_{2}, ... , x_{n}) = \frac{1}{\prod x_{j}! }\)` cumplen que su producto sea igual a la verosimilitud, por lo que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente mínimo. 
+
+---
+
+# Suficiencia
+
+&gt; Teorema 1.27. Técnica de la familia exponencial. Si `\(X\)` es una variable aleatoria cuyo dominio no depende de un parámetro desconocido `\(\theta\)` y la función de densidad/probabilidad de X dado `\(\theta\)` pertenece a la familia exponencial, es decir que tiene la forma:
+`\(f_{X}(x|\theta) = b(x)c(\theta)e^{-a(x)d(\theta)}, \qquad a(x) \neq 1\)`
+entonces `\(U = \sum_{j=1}^{n} a(X_{j})\)` es un estadístico suficiente mínimo para estimar `\(\theta\)`. 
+
+Prueba. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria tal que `\(X_{j}\)` pertenece a la familia exponencial. Entonces se cumple,
+	
+`\(\mathcal{L}(\theta) = \prod_{j=1}^{n} b(x_{j})c(\theta)e^{-a(x_{j})d(\theta)} = c(\theta)^{n} \prod b(x_{j}) e^{-d(\theta)\sum a(x_{j}) }\)`
+	
+Si tomamos como `\(U = \sum_{j=1}^{n} a(X_{j})\)`, `\(g(u,\theta) = c(\theta)^{n} e^{-d(\theta)u }\)` y `\(h(x_{1}, x_{2}, ... , x_{n}) = \prod b(x_{j})\)` entonces, por la técnica de factorización, se cumple que `\(U\)` es suficiente mínimo para `\(\theta\)`. 
+
+---
+
+# Suficiencia
+
+Ejemplo. Encuentre el estadístico suficiente mínimo para el ejemplo anterior pero utilizando la técnica de la familia exponencial.
+	
+Solución. Lo primero consiste en demostrar que la función de probabilidad de una Poisson tiene la forma de la familia exponencial. Viendo la función de probabilidad de una Poisson, `\(f(x|\lambda) = \frac{\lambda^{x}e^{-\lambda}}{x!}\)`, esta pareciera no cumplir la forma de la familia exponencial, no obstante podemos realizar algunas operaciones algebraicas para alcanzar esa forma: 
+	
+`\(f(x|\lambda) = \frac{\lambda^{x}e^{-\lambda}}{x!} = e^{\ln\left(\frac{\lambda^{x}e^{-\lambda}}{x!}\right)}= e^{\ln(\lambda^{x}) + \ln(e^{-\lambda}) - \ln(x!)}\)` 
+	
+`\(= e^{x\ln(\lambda) - \lambda - \ln(x!)} = e^{-\lambda}e^{x\ln(\lambda)}\frac{1}{x!}\)`
+
+---
+
+# Suficiencia
+
+Podemos ver que esta expresión tiene la forma de la familia exponencial con 
+
+`\(\begin{matrix} a(x)=x &amp; c(\lambda )={ e }^{ -\lambda  } \\ b(x)=\frac { 1 }{ x! }  &amp; d(\lambda )=-\ln { (\lambda ) }  \end{matrix}\)`
+	
+Por lo tanto podemos concluir que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente mínimo para `\(\lambda\)`. 
+	
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria de una población con función de densidad:
+	
+`\(f_{X}(x) = \begin{cases}\frac{\alpha x^{\alpha-1}}{\theta} e^{-\frac{x^{\alpha}}{\theta}} \quad si \quad x &gt; 0 \\	0 \quad si \quad x \leq 0	\end{cases}\)`
+	
+Encuentre un estadístico suficiente mínimo para `\(\theta\)`. 
+
+---
+
+# Suficiencia
+
+Solución. Podemos apreciar de la función de densidad anterior lo siguiente: 
+	
+`\(\begin{matrix} a(x) = x^{\alpha} &amp; c(\theta) = \frac{1}{\theta} \\ b(x) = \alpha x^{\alpha-1} &amp; d(\theta) = \frac{1}{\theta} \end{matrix}\)`
+	
+Por lo tanto, por la técnica de la familia exponencial, el estadístico `\(U = \sum_{j=1}^{n} X_{j}^{\alpha}\)` es suficiente mínimo para `\(\theta\)`. 
+	
+Supongamos que para este caso si quisieramos saber cuál sería un estadístico suficiente mínimo para `\(\alpha\)`. De las técnicas vistas hasta el momento no es posible obtener una respuesta, no obstante veremos posteriormente una estrategia para resolver este problema. 
+
+---
+
+### Ejercicios:
+
+1. Una variable `\(X\)` se distribuye como una `\(\chi^2_{\kappa}\)`. Considere un estadístico `\(T\)` que usa la información contenida en una muestra aleatoria `\(X_1, ..., X_n\)`. Si `\(T(X) = 2 \bar{X} -1\)`, calcule el error cuadrático medio de `\(T(X)\)`, y defina si es o no un estimador consistente.
+
+2. Sea `\(Y_1, ..., Y_n\)` una muestra independiente e idénticamente distribuida de una `\(N(\mu, \sigma^2)\)`. Entonces:
+
+a. Si `\(\mu\)` es desconocido y `\(\sigma^2\)` es conocida, entonces muestre que `\(\bar{Y}\)` es suficiente para `\(\mu\)`.
+
+b. Si `\(\mu\)` es conocido y `\(\sigma^2\)` es desconocida, entonces muestre que `\(\sum_{i=1}^{n} (Y_i - \mu)^2\)` es suficiente para `\(\sigma^2\)`. 
+
+c. Si `\(\mu\)` y `\(\sigma^2\)` son desconocidas, muestre que `\(\sum_{i=1}^{n} Y_i\)` y `\(\sum_{i=1}^{n} Y_i^2\)` son conjuntamente suficientes para `\(\mu\)` y `\(\sigma^2\)`. 
+
+
+---
+class: center, middle
+
+# ¿Qué discutimos hoy?
+
+Propiedades de los estimadores puntuales: **suficiencia**. Teorema de factorización, familia exponencial. Asignación del proyecto 1
+
+# ¿Qué nos falta para el I Parcial?
+
+Teorema de Rao-Blackwell. Completitud.
+Teorema de Lehman-Scheffé. Método de momentos. Método de máxima verosimilitud. Principio de invariancia.
+Distribución de los estimadores máximo-verosímiles en muestras grandes.
+
+Slides creadas via R package [**xaringan**](https://github.com/yihui/xaringan).
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
