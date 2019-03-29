@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>XS3310 Teoría Estadística</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Prof. Marcela Alfaro Córdoba" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# XS3310 Teoría Estadística
+## I Semestre 2019
+### Prof. Marcela Alfaro Córdoba
+### 3/05/2018 (updated: 2019-03-28)
+
+---
+
+
+
+
+
+class: center, middle
+
+# ¿Qué hemos visto hasta ahora?
+
+En resumen: ¿qué es un estimador puntual y qué propiedades hacen que sea aceptable para estimar un parámetro?
+
+# ¿Qué vamos a discutir hoy?
+
+Uno de los tres métodos para encontrar estimadores: 
+
+Estimadores de Rao-Blackwell, que hace uso de las propiedades anteriormente vistas. 
+
+---
+class: inverse,s center, middle
+
+# ¿Dudas rápidas del proyecto 1?
+
+https://malfaro2.github.io/XS3310/proyecto1.html
+
+
+---
+
+# Completitud
+	
+&gt; Definición 1.12. Completitud. Sea `\(U\)` un estadístico de una muestra aleatoria `\(X_{1}, X_{2}, ... , X_{n}\)` con función de densidad/probabilidad `\(f_{X}(x|\theta)\)` si `\(a \leq u \leq b\)` y `\(\alpha_{1} \leq \theta \leq \alpha_{2}\)` y sea `\(g(u)\)` una función continua en `\([a,b]\)`. Se dice que el estadístico `\(U\)` es **completo** para la distribución `\(f_{X}(x|\theta)\)` si se cumple que si `\(\quad E(g(U)) = 0 \quad \forall \theta \in [\alpha_{1}, \alpha_{2}] \quad entonces \quad g(U) = 0.\)`
+
+Ejemplo: Sea `\(U = \sum_{j=1}^{n} X_{j}\)` un estadístico suficiente de una muestra aleatoria de una población Bernoulli con probabilidad de éxito `\(p\)`. Demuestre que U es un estadístico completo si el espacio paramétrico de `\(p\)` es `\(] 0,1 [\)`.
+	
+Solución: Sabemos de antemano que el estadístico `\(U = \sum_{j=1}^{n} X_{j}\)` tiene distribución Binomial(n,p). Con esto procedemos a encontrar `\(E(g(U))\)` para cualquier función `\(g(\cdot)\)`. 
+
+`\(E(g(U)) = \sum_{u=0}^{n} g(u) \binom{n}{u} p^{u}\left(1-p\right)^{n-u} = \left(1-p\right)^{n} \sum_{u=0}^{n} g(u) \binom{n}{u} \left(\frac{p}{1-p}\right)^{u}\)`
+
+---
+
+# Completitud
+
+Observe que como el dominio de `\(p\)` no incluye el cero ni el uno entonces esta expresión solo puede ser cero si y solo si 
+	
+`\(\sum_{u=0}^{n} g(u) \binom{n}{u} \left(\frac{p}{1-p}\right)^{u} = 0\)`
+
+Como esta expresión es un polinomio de `\(\left(\frac{p}{1-p}\right)\)` entonces esta solo puede ser cero si sus coeficientes son cero, y esto solo va a suceder si y solo si `\(g(u) = 0\)`. 
+	
+Por lo tanto concluimos que `\(U\)` es un estadístico completo para la familia de distribuciones Bernoulli. 
+
+En general, vamos a estar trabajando con estadísticos completos en este curso y no nos vamos a estar deteniendo en las demostraciones de que estos lo sean pues ya sale de los propósitos del curso. No obstante, esta propiedad tendrá mayor uso con los teoremas siguientes. 
+
+---
+
+# Estimadores Rao-Blackwell
+	
+&gt; Teorema 1.28. Teorema de Rao-Blackwell. Sea `\(U = T(X_{1}, X_{2}, ... , X_{n})\)` es un estadístico suficiente minimal para estimar `\(\theta\)` y sea `\(\hat{\theta}\)` un estimador cualquiera de `\(\theta\)`. Si definimos otro estimador como `\(\hat{\theta}^{*}=E(\hat{\theta}|U)\)` se cumple que `\(ECM(\hat{\theta}^{*}) \leq ECM(\hat{\theta})\)`. Es decir, a partir de un estimador `\(\hat{\theta}\)` se puede encontrar un estimador `\(\hat{\theta}^{*}\)` óptimo. 
+
+NOTA: ¿Es el mismo señor Rao de Cramer-Rao? SI! https://en.wikipedia.org/wiki/C._R._Rao	
+
+NOTA: se puede demostrar que si `\(\hat{\theta}\)` es insesgado, entonces el estimador mejorado `\(\hat{\theta}^{*}\)` también será insesgado.
+
+---
+
+# Estimadores Rao-Blackwell
+	
+Ejemplo: Suponga que una operadora de llamadas recibe llamadas de acuerdo a un proceso Poisson con promedio de llamadas por minuto, `\(\lambda\)`. Se obtiene una muestra aleatoria `\(X_{1}, X_{2}, ... , X_{n}\)` de las llamadas telefónicas que llegaron en `\(n\)` periodos sucesivos de un minuto. Para estimar la probabilidad de que el siguiente periodo de un minuto pase sin llamadas ( `\(e^{-\lambda}\)` ) se utiliza el siguiente estimador:
+	
+`\(\hat{\theta} = \begin{cases} 1 \quad si \quad X_{1} = 0 \\0 \quad en \quad otros \quad casos \end{cases}\)`
+	
+Es decir, se estima la probabilidad en 1 si no se recibieron llamadas en el primer minuto y cero en el caso contrario. Con base en esto, obtenga el estimador de Rao-Blacwell. 
+
+---
+
+# Estimadores Rao-Blackwell
+	
+Solución: Anteriormente habiamos demostrado que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente minimal para `\(\lambda\)`, por lo que encontramos el estimador de Rao-Blackwell a partir de este estadístico:
+	
+`\(\hat{\theta}^{*} = E(\hat{\theta}|U = u) = P\left(X_{1} = 0 | \sum_{j=1}^{n} X_{j} = u\right)\)`
+	
+`\(=\frac{P\left(X_{1} = 0 , \sum_{j=2}^{n} X_{j} = u\right)}{P\left(\sum_{j=1}^{n} X_{j} = u\right)}\)`
+	
+`\(= \dfrac{e^{-\lambda}\frac{((n-1)\lambda)^{u}e^{-(n-1)\lambda}}{u!} }{\frac{(n\lambda)^{u}e^{-n\lambda}}{u!}}\)`
+	
+`\(= \left(\frac{n-1}{n}\right)^{u} = \left(1-\frac{1}{n}\right)^{u}\)` 
+
+---
+
+# Teorema de Lehmann-Scheffé
+
+&gt; Teorema 1. 29. Teorema de Lehmann-Scheffé. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria de una población con función de densidad/probabilidad `\(f_{X}(x|\theta)\)`. Si `\(U = T(X_{1}, X_{2}, ... , X_{n})\)` es un estadístico suficiente y completo para `\(\theta\)` y además se cumple que `\(E(h(U))\)` es insesgado para estimar `\(\theta\)` entonces `\(h(U)\)` es el único estimador insesgado de variancia mínima para `\(\theta\)`. 
+
+Prueba: 
+	
+Sabemos por el Teorema de Rao-Blackwell que si `\(\hat{\theta}\)` es un estimador insesgado de `\(\theta\)` entonces `\(\hat{\theta}^{*} = E(\hat{\theta}|U)\)` es un estimador insesgado de variancia mínima para `\(\theta\)`. 
+Para demostrar unicidad supongamos que tenemos otro estimador `\(\hat{\phi}^{*}\)` que es insesgado y de variancia mínima para `\(\theta\)`. Por lo tanto se debe cumplir lo siguiente:
+	
+`\(E(\hat{\theta}^{*}) = E(\hat{\phi}^{*}) = \theta \Rightarrow E(\hat{\theta}^{*}) - E(\hat{\phi}^{*}) = E(\hat{\theta}^{*} - \hat{\phi}^{*}) = E(g(U))= 0\)`
+	
+Como se cumple que `\(f_{X}(x|\theta)\)` es una familia completa en el estadístico suficiente `\(U\)` entonces se cumple que `\(g(U) = 0\)`, es decir `\(\hat{\theta}^{*} - \hat{\phi}^{*} = 0\)`, que es equivalente a decir `\(\hat{\theta}^{*} = \hat{\phi}^{*}\)`. Por lo tanto concluimos que solo existe un único estimador insesgado de variancia mínima. 
+
+---
+
+# EIVM
+	
+Con los resultados anteriores, para distribuciones completas, si tenemos un estadístico `\(U\)` que es suficiente minimal para estimar `\(\theta\)` entonces solo debemos encontrar una función `\(h(\cdot)\)` que sea insesgado y por lo tanto obtendremos un **estimador insesgado de variancia mínima**, el cual es único. 
+	
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria tal que `\(X_{j} \sim Bernoulli(p)\)`. Encuentre un EIVM para `\(p\)`. 
+	
+Solución. Ya habiamos demostrado con anterioridad que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente minimal y completo en una distribución Bernoulli. Para encontrar el EIVM  solo debemos encontrar una función de `\(U\)` que sea insesgada para `\(p\)`. 
+	
+`\(E(U) = E\left(\sum_{j=1}^{n} X_{j}\right) = np\)`
+`\(\Rightarrow \hat{p} = \frac{U}{n} = \frac{\sum_{j=1}^{n} X_{j}}{n}\)` es un EIVM para `\(p\)`.
+	
+---
+
+# EIVM
+
+Ejemplo. Sea `\(X_{1}, X_{2}, ... , X_{n}\)` una muestra aleatoria tal que `\(X_{j} \sim Exp(\beta)\)`. Demuestre que `\(\overline{X}\)` es un EIVM para `\(\beta\)`. 
+	
+Solución. Suponiendo que la exponencial es una familia completa, debemos encontrar un estadístico suficiente para `\(\beta\)`. Recordemos la función de densidad:
+	
+`\(f_{X}(x) = \frac{1}{\beta}e^{-\frac{x}{\beta}}\)`
+	
+En este caso es evidente la forma de la familia exponencial:
+	
+`\(\begin{matrix} a(x) = x &amp; c(\beta) = \frac{1}{\beta} &amp; b(x) = 1 &amp; d(\beta) = \frac{1}{\beta} \end{matrix}\)`
+	
+Por lo tanto decimos que `\(U = \sum_{j=1}^{n} X_{j}\)` es un estadístico suficiente minimal para `\(\beta\)`. 
+	
+Por lo tanto, `\(E(U) = E\left(\sum_{j=1}^{n} X_{j}\right) = n\beta\)`. 
+	
+Concluimos, por el Teorema de Rao-Blackwell y Lehmann-Scheffé que `\(\overline{X}\)` es un EIVM para `\(\beta\)`. 
+	
+---
+class: center, middle
+
+# Ejercicios
+
+### ¿Por qué demostrar que un estimador es EIVM es importante?
+
+ Ejemplo 9.6 - 9.9 de Mendenhall
+
+### Ejercicio para hacer en clase: 9.60 de Mendenhall.
+
+### Práctica para el examen
+
+---
+class: center, middle
+
+# ¿Qué discutimos hoy?
+
+Propiedades de los estimadores puntuales: **completitud**. Teorema de Rao-Blackwell, Teorema de Lehmann-Scheffé, EIVM.
+
+# ¿Qué nos falta para el I Parcial?
+
+Método de momentos. Método de máxima verosimilitud. Principio de invariancia. Distribución de los estimadores máximo-verosímiles en muestras grandes.
+
+Slides creadas via R package [**xaringan**](https://github.com/yihui/xaringan).
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
