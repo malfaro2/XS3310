@@ -195,7 +195,7 @@ Por lo tanto podemos concluir que con un $95\%$ de confianza el intervalo $\left
 
 Ejemplo: Suponiendo que $\theta = 50$ simule un valor que pertenece a la población del ejemplo anterior y evalueelo en el intervalo encontrado. 
 	
-Solución: Recordemos que para simular debemos igualar la función de distribución de la variable aleatoria objetivo con la de una Uniforme$(0,1)$. En nuestro caso tenemos la siguiente función de distribución para $X$:
+Solución: Recordemos que para simular debemos igualar la función de distribución de la variable aleatoria objetivo con la de una Uniforme $(0,1)$. En nuestro caso tenemos la siguiente función de distribución para $X$:
 	
 $F_{X}(x)=\begin{cases}0\quad si \quad x \leq 0 \\ \frac{x}{\theta} \quad si \quad 0 < x < \theta \\ 1 \quad si \quad x > \theta \end{cases}$
 
@@ -227,7 +227,7 @@ Solución: Sabemos de antemano que $T = \sum_{j=1}^{20} X_{j} \sim Gamma(\alpha 
 	
 $T$ no sirve como pivote pues no depende de $\beta$ y su distribución todavía depende de $\beta$. Debemos encontrar alguna transformación de $T$ que haga que se cumplan las dos condiciones.
 	
-Recordemos que la función generadora de momentos de una Gamma$(\alpha,\beta)$ es $(1-\beta t)^{-\alpha}$. Por lo tanto, si $U = \frac{T}{\beta}$ entonces,
+Recordemos que la función generadora de momentos de una Gamma $(\alpha,\beta)$ es $(1-\beta t)^{-\alpha}$. Por lo tanto, si $U = \frac{T}{\beta}$ entonces,
 	
 $m_{U}(t) = m_{T}\left(\frac{t}{\beta}\right) = \left(1-t\right)^{-20}$
 	
@@ -256,6 +256,19 @@ Esta es la función generadora de momentos de una ji-cuadrado con 40 grados de l
 ![Cuantiles de una ji-cuadrado con 40gl](chi.jpeg)
 
 ---
+
+### Técnica del pivote
+
+
+Como la tabla de la ji-cuadrado acumula hacia la derecha (a más de), esto significa que $a$ es el valor de la tabla de una ji-cuadrado con $40$gl que acumula a su derecha una probabilidad de $1-\frac{\alpha}{2}$. Por consiguiente $b$ es el valor de la tabla que acumula a su derecha una probabilidad de $\frac{\alpha}{2}$. Para simiplicidad vamos a llamar estos valores $\chi^{2}_{1-\frac{\alpha}{2}, 40}$ y $\chi^{2}_{\frac{\alpha}{2}, 40}$, respectivamente. 
+	
+Ya encontrados los valores de $a$ y $b$ podemos proceder a despejar $\beta$ de la probabilidad que acumula $1-\alpha$:
+	
+$P(a \leq V \leq b) = P\left( \chi^{2}_{1-\frac{\alpha}{2}, 40} \leq \frac{2T}{\beta} \leq \chi^{2}_{\frac{\alpha}{2}, 40} \right) =  P\left(  \frac{2T}{\chi^{2}_{\frac{\alpha}{2}, 40}} \leq \beta \leq \frac{2T}{\chi^{2}_{1-\frac{\alpha}{2}, 40}}  \right) = 1 -\alpha$
+	
+Por lo tanto, con una probabilidad de $1-\alpha$ el intervalo $\left[ \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{\frac{\alpha}{2}, 40}}, \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{1-\frac{\alpha}{2}, 40}}  \right]$ incluye el valor de $\beta$. 
+
+---
 class: center, middle
 
 # ¿Qué discutimos hoy?
@@ -264,7 +277,7 @@ Estimación por intervalos, método del pivote
 
 # ¿Qué nos falta para el II Parcial?
 
-Fórmulas para las estimaciones por intervalo más comunes, bootstrap y contrastes de hipótesis.
+Fórmulas para las estimaciones por intervalo más comunes (media, diferencias de medias, variancias, etc., para distribuciones normales), bootstrap y contrastes de hipótesis.
 
 
 Slides creadas via R package [**xaringan**](https://github.com/yihui/xaringan).
