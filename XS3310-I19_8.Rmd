@@ -79,7 +79,7 @@ Existen dos tipos de estimaciones por intervalos:
 * Intervalos bilaterales
 * Intervalos unilaterales
 	
-En el primer caso se tienen dos valores $Li$ y $Ls$ que constituyen los límites inferior y superior del intervalo. Es decir, con probabilidad $1-\alpha$ el intervalo $\left[Li, Ls\right]$ contiene el valor de $\theta$. Equivale también decir que el intervalo $\left[Li, Ls\right]$ contiene el valor de $\theta$ con una confianza del $(1-\alpha)\cdot 100\%$. 
+En el primer caso se tienen dos valores $Li$ y $Ls$ que constituyen los límites inferior y superior del intervalo. Es decir, el intervalo $\left[Li, Ls\right]$ contiene el valor de $\theta$ con una confianza del $(1-\alpha)\cdot 100\%$. 
 	
 En el segundo caso, se determina solamente un límite que puede ser inferior $(Li)$ o superior $(Ls)$, dependiendo del interés del estudio. Se tiene así intervalos de la forma $\left[ Li, +\infty \right[$ o $\left] -\infty, Ls \right]$. Los valores $\pm \infty$ pueden ser sustituidos por el mínimo o máximo valor del dominio del parámetro de interés. 
 	
@@ -128,7 +128,7 @@ Ahora debemos seguir con el procedimiento para encontrar un intervalo de confian
 
 ### Técnica del pivote
 
-Ejemplo: Sea $Y$ una variable aleatoria con distribución Exponencial con media $\beta$ desconocida. Utilice este valor para construir un intervalo bilateral para $\beta$ con probabilidad 0.90. 
+Ejemplo: Sea $Y$ una variable aleatoria con distribución Exponencial con media $\beta$ desconocida. Utilice este valor para construir un intervalo bilateral para $\beta$ con una confianza del $90\%$.
 	
 Solución: En este caso podemos utilizar como pivote $U = \frac{Y}{\beta}$ ya que está en términos de la variable aleatoria y de $\beta$ al igual que se puede demostrar que su distribución no depende de $\beta$. En este caso $U \sim Exp(1)$. 
 
@@ -156,7 +156,7 @@ $P(a \leq U \leq b) = P\left( -\ln(0.95) \leq \frac{Y}{\beta} \leq -\ln(0.05) \r
 	
 $P\left( \frac{-1}{\ln(0.95)} \geq \frac{\beta}{Y} \geq \frac{-1}{\ln(0.05)} \right) = P\left( \frac{-Y}{\ln(0.95)} \geq \beta \geq \frac{-Y}{\ln(0.05)} \right) = 0.90$
 	
-Por lo tanto tenemos que $Li = \frac{-Y}{\ln(0.05)}$ y $Ls = \frac{-Y}{\ln(0.95)}$ por lo que podemos concluir que con una probabilidad de $0.90$ el intervalo $\left[ \frac{-Y}{\ln(0.05)}, \frac{-Y}{\ln(0.95)} \right]$ incluye el valor de $\beta$. 
+Por lo tanto tenemos que $Li = \frac{-Y}{\ln(0.05)}$ y $Ls = \frac{-Y}{\ln(0.95)}$ por lo que podemos concluir que con una confianza del $90\%$ el intervalo $\left[ \frac{-Y}{\ln(0.05)}, \frac{-Y}{\ln(0.95)} \right]$ incluye el valor de $\beta$. 
 	
 ---
 
@@ -216,7 +216,7 @@ Evaluando este valor en el intervalo obtenido tenemos que con un $95\%$ de confi
 	
 NOTA: Es posible observar que si $u > 0.95$ entonces el intervalo no va a incluir el valor de $\theta = 50$, para una confianza del $95\%$. 
 	
-Ejemplo: Sea $X_{1}, X_{2}, ... , X_{20}$ una muestra aleatoria tal que $X_{j} \sim Exp(\beta)$. Determine un intervalo de confianza bilateral para $\beta$ con probabilidad $1-\alpha$. Utilice como pivote una función de $\sum_{j=1}^{20} X_{j}$. 
+Ejemplo: Sea $X_{1}, X_{2}, ... , X_{20}$ una muestra aleatoria tal que $X_{j} \sim Exp(\beta)$. Determine un intervalo de confianza bilateral para $\beta$ con una confianza del $(1-\alpha)\%$. Utilice como pivote una función de $\sum_{j=1}^{20} X_{j}$. 
 
 ---
 
@@ -266,7 +266,7 @@ Ya encontrados los valores de $a$ y $b$ podemos proceder a despejar $\beta$ de l
 	
 $P(a \leq V \leq b) = P\left( \chi^{2}_{1-\frac{\alpha}{2}, 40} \leq \frac{2T}{\beta} \leq \chi^{2}_{\frac{\alpha}{2}, 40} \right) =  P\left(  \frac{2T}{\chi^{2}_{\frac{\alpha}{2}, 40}} \leq \beta \leq \frac{2T}{\chi^{2}_{1-\frac{\alpha}{2}, 40}}  \right) = 1 -\alpha$
 	
-Por lo tanto, con una probabilidad de $1-\alpha$ el intervalo $\left[ \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{\frac{\alpha}{2}, 40}}, \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{1-\frac{\alpha}{2}, 40}}  \right]$ incluye el valor de $\beta$. 
+Por lo tanto, con una confianza de $(1-\alpha)\%$ el intervalo $\left[ \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{\frac{\alpha}{2}, 40}}, \frac{2\sum_{j=1}^{20} X_{j}}{\chi^{2}_{1-\frac{\alpha}{2}, 40}}  \right]$ incluye el valor de $\beta$. 
 
 ---
 class: center, middle
