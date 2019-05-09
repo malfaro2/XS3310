@@ -81,7 +81,7 @@ $$se(\bar{X})= \sqrt(var(\bar{X})) = \frac{\sigma}{\sqrt{n}}$$
 Esto sugiere que podemos estimar el error estándar con $\hat{se}(\bar{X})=\frac{s}{\sqrt{n}}$. Y aquí, tenemos dos opciones: la primera utilizar el teorema del límite central (teoría asintótica) o también podemos utilizar el estadístico:
 
 $$T = \frac{\bar{X}- \bar{Y}}{\sqrt{\hat{se}(\bar{X})^2 + \hat{se}(\bar{Y})^2}}$$
-¿Cuál es el problema? En el caso asintótico, necesitamos de una muestra grande, y en el segundo caso, la distribución de T NO es conocida (podríamos usar la aproximación de Satterhwaite, pero eso sería solo una aproximación).
+¿Cuál es el problema? En el caso asintótico, necesitamos de una muestra grande, y en el segundo caso, la distribución de T NO es conocida (podríamos usar la aproximación de Satterthwaite, pero eso sería solo una aproximación).
 
 ---
 
@@ -101,7 +101,7 @@ $med(X) = 94, \quad med(Y)=46 \quad \text{y} \quad T'= med(X) - med(Y)= 48$
 
 $$med(X) \xrightarrow{d} N(m_p, \frac{\sigma^2}{4np(m_p)})$$
 
-donde $m_P$ es la mediana de la distribución P.
+donde $m_p$ es la mediana de la distribución P.
 
 
 ---
@@ -132,7 +132,7 @@ donde $m_P$ es la mediana de la distribución P.
 
 * Suponga que una muestra $X = (X_1, \dots, X_n)^T$ es utilizada para estimar un parámetro $\theta$. Sea $\hat{\theta}= s(X)$ un estadístico para estimar el parámetro $\theta$. Para hacer inferencia acerca de $\theta$, nos interesa la distribución muestral de $\hat{\theta}$, o ciertos aspectos acerca de esa distribución: la exactitud de nuestra estimación, el intervalo de confianza, etc. En muchas aplicaciones, la distribución muestral de $\theta$ no se puede encontrar.
 
-* Si conociéramos la distribución poblacional $(F)$, podríamos sacar muestras $X^{(b)}, b=1,\dots,B$ de F usando métodos de Monte Carlo para estimar la distribución muestral del estimado. Sin embargo, si $F$ es desconocido, entonces bootstrap sugiere que podemos aproximar ese muestreo re-muestreando nuestra muestra original. Así, podemos encontrar la distribución *empírica* del estimador.
+* Si conociéramos la distribución poblacional $P$, podríamos sacar muestras $X^{(b)}, b=1,\dots,B$ de P usando métodos de Monte Carlo para estimar la distribución muestral del estimado. Sin embargo, si $F$ es desconocido, entonces bootstrap sugiere que podemos aproximar ese muestreo re-muestreando nuestra muestra original. Así, podemos encontrar la distribución *empírica* del estimador.
 
 https://seeing-theory.brown.edu/frequentist-inference/es.html
 
@@ -140,11 +140,11 @@ https://seeing-theory.brown.edu/frequentist-inference/es.html
 
 # Distribución Empírica
 
-Para una muestra $X_1, \dots, X_n$ de variables aleatorias con valores reales, independientes con distribución P, definimos la distribución \hat{P} como:
+Para una muestra $X_1, \dots, X_n$ de variables aleatorias con valores reales, independientes con distribución P, definimos la distribución $\hat{P}$ como:
 
 $P(A) = \frac{1}{n}\sum_{i=1}^{n} 1_A(X_i)$ para $A \subseteq \Re$.
 
-$\hat{P}$ es la distribución empírica de la muestra $X$. \hat{P} puede pensarse como una distribución que pone masa $1/n$ en cada observación X_i (para valores que ocurren más de una vez la masa será un múltiplo de $1/n$). Entonces, $\hat{P}$ es una distribución de probabilidad discreta con un espacio efectivo de muestreo ${X_1, \dots, X_n}$.
+$\hat{P}$ es la distribución empírica de la muestra $X$. $\hat{P}$ puede pensarse como una distribución que pone masa $1/n$ en cada observación $X_i$ (para valores que ocurren más de una vez la masa será un múltiplo de $1/n$). Entonces, $\hat{P}$ es una distribución de probabilidad discreta con un espacio efectivo de muestreo ${X_1, \dots, X_n}$.
 
 Puede demostrarse que $\hat{P}$ es el estimador máximo verosimil no paramétrico de $P$, lo cual justifica que podamos estimar $P$ con $\hat{P}$ sin tener otra información acerca de P (como por ejemplo si P pertenece a una familia paramétrica).
 
@@ -154,7 +154,7 @@ Puede demostrarse que $\hat{P}$ es el estimador máximo verosimil no paramétric
 
 ## Resultados teóricos
 
-Sea $A \subseteq \Re$ (tal que $P(A)$ está definido), entonces tenemos: $\hat{P}(A) \xrightarrow P(A)$ cuando $n \rightarrow \infty$.
+Sea $A \subseteq \Re$ (tal que $P(A)$ está definido), entonces tenemos: $\hat{P}(A) \xrightarrow{d} P(A)$ cuando $n \rightarrow \infty$.
 
 Este resultado es una consecuencia directa de La Ley de los Grandes Números, ya que:
 
@@ -173,7 +173,7 @@ donde $I$ es el conjunto de intervalos en $\Re$. En otras palabras, la distribuc
 
 Suponga que queremos una muestra iid de $\hat{P}$: $X^* = (X^*_1, \dots, X^*_n)^T$. Como mencionamos antes, $\hat{P}$ pone masa $1/n$ en cada observación $X_i$. Entonces, cuando muestreamos de $\hat{P}$, la observación i-ésima $X_i$ en la muestra original puede ser seleccionada con probabilidad $1/n$. Esto nos lleva al siguiente proceso:
 
-* Seleccione $i_n, \dots, i_n$ independientemente de una distribución uniforme en ${1, \dots, n}$.
+* Seleccione $i_1, \dots, i_n$ independientemente de una distribución uniforme en ${1, \dots, n}$.
 
 * Ahora haga $X^{*}_j = X_{ij}$ y $X^* = (X^*_1, \dots, X^*_n)^T$.
 
@@ -191,7 +191,7 @@ En otras palabras, saque una muestra aleatoria con reemplazo de la muestra origi
 
 La distribución muestral de $\hat{\theta}$ es entonces estimada por su equivalente de bootstrap:
 
-$$P(\theta \in A) = P^*(\hat{\theta} \in A)$$
+$$\hat{P}(\hat{\theta} \in A) = P^*(\hat{\theta} \in A)$$
 
 ---
 
@@ -206,7 +206,7 @@ $$P(\theta \in A) = P^*(\hat{\theta} \in A)$$
 
 * En algunas ocasiones la forma de la distribución poblacional es conocida, pero la evaluación de la distribución exacta de la distribución muestral no es calculable. 
 
-* El procediento consiste en:
+* El procedimiento consiste en:
 
     - Escoja B muestras bootstrap independientes $X^{*(1)}, \dots, X^{*(B)}_n$ de $\hat{P}$: $X_1^{*(b)}, \dots, X^{*(b)}_n \sim_{iid} \hat{P}$ para $b = 1, \dots, B$.
     - Evalúe las repeticiones de bootstrap: $\hat{\theta}^{*(b)}=s(X^{*(b)})$.
