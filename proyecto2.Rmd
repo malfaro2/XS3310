@@ -1,0 +1,145 @@
+---
+title: "Proyecto 2"
+author: "XS3310 - Marcela Alfaro Córdoba"
+date: "3/13/2019 (updated: `r Sys.Date()`)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Comparación de intervalos de confianza utilizando la técnica de pivote o la técnica bootstrap.
+
+## Problema
+
+Sea $X$ una variable aleatoria que se distribuye como Exponencial, con parámetro $\theta$, que describe la vida útil de los bombillos de $60$ watts. Queremos encontrar el intervalo de confianza del $95\%$ para el parámetro $\theta$, utilizando tres métodos: 
+
+* primero, la definición de pivote (de manera similar al ejemplo de la página 4 de la clase 9), 
+
+* segundo el IC bootstrap-t (página 19 de la clase 10), 
+
+* y por último el IC percentiles (página 20 de la clase 10). 
+
+En adelante utilizaremos los siguientes términos:
+
+* B = número de muestras de bootstrap
+
+* sims = número de simulaciones.
+
+* n = tamaño de la muestra original.
+
+Este ejercicio consiste en llevar a cabo un pequeño estudio de simulación para comparar la cobertura de cada intervalo, con el mismo problema.
+
+# Estudio de simulación
+
+Al igual que el ejercicio pasado, debemos generar muestras de la distribución que estamos asumiendo como cierta, con un valor paramétrico fijado de antemano (para poder calcular coberturas). Entonces, en este caso, vamos a generar sims=1000 muestras aleatorias de una distribución exponencial con parámetro $\theta=900$. 
+
+```{r}
+set.seed(16)
+gen_fun <- function(nrep = 15, theta = 900) {
+  X <- rexp(nrep, rate = 1/theta)
+  return(X)
+}
+data <- replicate(n = 1000,gen_fun(), simplify = FALSE )
+```
+
+Ahora que tenemos una lista con 1000 conjuntos de datos distintos (todos de la misma distribución), vamos a calcular los tres intervalos con cada uno de ellos.
+
+## Intervalo usando pivote $U = \frac{\sum_{i=1}^{n} X}{\theta}$:
+
+```{r}
+CI_pivote <- function(X){
+  n <- length(X)
+  IC1 <- c(sum(X)/qgamma(0.975,n,1), 
+          sum(X)/qgamma(0.025,n,1))
+  return(IC1)
+}
+```
+
+## Intervalo IC bootstrap-t 
+
+```{r}
+CI_boott <- function(X, B){
+    theta_som <- mean(X) 
+    n <- length(X)
+    se_theta  <- sd(X)/sqrt(n)
+    boot_muestras <- matrix(sample(X, size = n * B, 
+                          replace = T), nrow = n,
+                          ncol = B)
+    boot_media <- apply(boot_muestras, 2, mean)
+    T_b <- (boot_media - theta_som)/se_theta
+    IC2 <- c(theta_som + quantile(T_b, probs = 
+              0.025)*se_theta,
+              theta_som + quantile(T_b, probs = 
+              0.975)*se_theta)
+    return(IC2)}
+```
+
+## Intervalo IC percentiles
+
+```{r}
+CI_bootperc <- function(X, B){
+    mu <- mean(X)  
+    n <- length(X)
+    boot_muestras <- matrix(sample(X, size = n * B, 
+                          replace = T), nrow = n,
+                          ncol = B)
+    boot_media <- apply(boot_muestras, 2, mean)
+    IC3 <- quantile(boot_media, probs = 
+                   c(0.025, 0.975))
+    return(IC3)}
+```
+
+
+## Utilice cada función para calcular los intervalos, y a la vez calcular su cobertura:
+
+
+```{r}
+library(purrr) 
+
+cal_fun <- function(dat) {
+  B <- 1000
+  CI1<-CI_pivote(dat)
+  CI2<-CI_boott(dat, B)
+  CI3<-CI_bootperc(dat,B)
+  return(c(findInterval(vec=CI1,x=900)==1,
+           findInterval(vec=CI2,x=900)==1,
+           findInterval(vec=CI3,x=900)==1))
+}
+
+results <- map(data, cal_fun)
+```
+
+## Cobertura de cada uno de los intervalos:
+
+La cobertura se refiere al porcentaje de intervalos que incluyen al verdadero parámetro.
+
+```{r}
+apply(do.call(rbind,results),2,sum)/1000
+```
+
+## Su trabajo consiste en llevar a cabo los siguientes puntos:
+
+1. Redacte de manera clara y concisa el objetivo del estudio de Monte Carlo, definiendo matemáticamente los intervalos de confianza que quiere comparar. (10pts)
+
+2. Presente los resultados de la simulación (tal como está planteada) en una tabla resumida, incluyendo medidas de variabilidad para cada estimación que esté haciendo. (10pts). NOTA: Ud puede modificar la simulación, sin embargo, lo que pide esta pregunta es que utilice el código que ya está escrito para tratar de responder (al menos uno de) sus objetivos. 
+
+3. Compare la cobertura de los tres métodos para encontrar el intervalo de confianza. ¿Por qué difieren los resultados del $95\%$ con el que se trabajó? ¿Cuál cobertura esperaba Ud para cada opción y por qué? (20pts)
+
+4. Describa brevemente cómo diseñaría una simulación que elabore de una manera más completa (con más evidencia) su respuesta anterior (no hace falta llevarla a cabo, solo tiene que describir cómo la haría). (10pts)
+
+TOTAL: 50 puntos, NOTA: 5$\%$
+
+## Recomendaciones para la entrega:
+
+a. Solo debe entregar las respuestas a las preguntas 1,2,3, y 4. El formato recomendado para la elaboración es .Rmd, pero se acepta cualquier otro formato de elaboración siempre y cuando el resultado (entregable) sea un archivo .pdf y este sea LEGIBLE. Además, si su respuesta no es clara y no hay evidencia de cómo lo hizo (o no es comprensible), no podemos darle puntos parciales. 
+
+b. Recuerde que Ud está entregando un reporte con un mensaje, asegúrese de dejar claro ese mensaje y responder la pregunta de su objetivo utilizando tablas y/o gráficos según vea necesario.
+
+c. Puede adjuntar el código que utilizó como anexo (este paso es recomendado, para asegurar reproducibilidad y transparencia). 
+
+d. El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.
+
+e. La fecha de entrega es el martes 14 de mayo a las 12 media noche vía Mediación Virtual. No se aceptarán trabajos por correo electrónico, ni por cualquier otro medio. Ese día **NO** hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo. 
+
