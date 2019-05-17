@@ -28,6 +28,11 @@ Todo sobre estimadores puntuales + pivotes e intervalos de confianza. Bootstrap 
 Contrastes de hipótesis: función de potencia, tamaño del contraste, el valor p.
 
 ---
+class: middle, inverse, center
+
+## Pero antes: ¿comentarios de la tarea?
+
+---
 
 # Contrastes de hipótesis
 	
