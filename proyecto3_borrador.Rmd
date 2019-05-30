@@ -1,0 +1,170 @@
+---
+title: "Proyecto 3"
+author: "XS3310 - Marcela Alfaro Córdoba"
+date: '5/31/2019 (updated: `r Sys.Date()`)'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Comparación de función de potencia para un contraste de hipótesis cuando los supuestos no se cumplen. 
+
+## Problema
+
+Suponga que se tienen dos muestras aleatorias independientes $X_1, X_2, \dots , X_n$ y $Y_1, Y_2, \dots , Y_n$ tales que $X_j \sim N(\mu_1, 1)$ y $Y_j \sim N(\mu_2, 1)$. Se desean contrastar las siguientes hipótesis:
+
+$H_0: \mu_1 − \mu_2 = 0$ contra $H_1: \mu_1 − \mu_2 \not = 0$
+
+Para contrastar estas hipótesis se va a rechazar la hipótesis nula si $(\bar{X} − \bar{Y}) > z_{1− \alpha/2} \sqrt{2/n}$ o si $(\bar{X} − \bar{Y}) < -z_{1− \alpha/2} \sqrt{2/n}$ ($RC_{\delta}$) con un tamaño de contraste $\alpha$. Fijando $\alpha = \alpha_c$, Ud puede encontrar la distribución de $(\bar{X} − \bar{Y})$ asumiendo que la hipótesis nula es cierta, y también la distribución asumiendo cualquier valor de ($\mu_1 - \mu_2$), y con esa distribución escribir la función de potencia en términos del problema.
+
+De hecho, Ud puede escribir una función en R que tome como argumentos el tamaño de muestra, el tamaño de contraste fijado ($\alpha_c$) y un valor para el parámetro de interés ($\mu_1 - \mu_2$), que devuelva la potencia del contraste para ese valor parámetrico.
+
+$Potencia(\mu_1-\mu_2) = P(X \in RC_{\delta}) = P((\bar{X} − \bar{Y}) > z_{1− \alpha/2} \sqrt{2/n}) + P((\bar{X} − \bar{Y}) < -z_{1− \alpha/2} \sqrt{2/n})$
+
+```{r}
+potencia <- function(n,alpha,dif){
+  z <- qnorm(1-alpha/2)
+  pot <- (1-pnorm(z*sqrt(2/n),mean=dif, sd=sqrt(2/n))) +
+         (pnorm(-z*sqrt(2/n),mean=dif, sd=sqrt(2/n)))
+  return(pot)
+}
+
+x=seq(-5,5,0.1)
+plot(x,potencia(100,0.04,x), type='l', 
+    ylab=expression(paste("Potencia(",mu[1] - mu[2],")")), 
+    xlab=expression(mu[1] - mu[2]),
+    ylim=c(0,1),
+    main="Función de potencia de la prueba")
+```
+
+
+¿Qué pasa cuando se violan los supuestos de un contraste como este? En este caso, tenemos tres supuestos:
+
+* Cada muestra viene de una población con distribución normal. 
+
+* Las dos poblaciones tienen la misma variancia y es igual a 1. 
+
+* El tamaño de la muestra debe ser el mismo en las dos muestras.
+
+Es posible comparar escenarios en los que se violen uno, dos o los tres supuestos anteriores. Las opciones son las siguientes:
+
+Tipo de Muestra | Distribuciones | ¿Igual variancia? | ¿Igual n?|
+----------------|----------------|-------------------|----------|
+Se cumplen      | normales       |   si              | si       |
+No se cumple 1  | normales       |   si              | no       |
+No se cumple 1  | normales       |   no              | si       |
+No se cumple 1  | no normales    |   si              | si       |
+No se cumplen 2 | normales       |   no              | no       |
+No se cumplen 2 | no normales    |   si              | no       |
+No se cumplen 2 | no normales    |   no              | si       |
+No se cumplen 3 | no normales    |   no              | no       |
+
+Ud va a escoger la opción en donde se cumplen los supuestos (tipo de muestra 1) y una opción más de esa tabla (o las que quiera) y la va a llamar tipo de muestra 2. Así, Ud generará dos escenarios, que implican cuatro conjuntos de muestras, fijando la hipótesis alternativa como simple (por ejemplo ($\mu_1 - \mu_2 = 3$)):
+
+Escenario 1:
+
+* Tipo de Muestra 1, asumiendo que la hipótesis nula es cierta
+* Tipo de Muestra 1, asumiendo que una hipótesis alternativa es cierta
+
+Escenario 2:
+
+* Tipo de Muestra 2, asumiendo que la hipótesis nula es cierta
+* Tipo de Muestra 2, asumiendo que una hipótesis alternativa es 
+
+Ahora bien, si Ud fija el contraste que quiere evaluar ($\delta$ especificado anteriormente) y el tamaño de contraste ($\alpha_c$), Ud puede calcular la potencia *empírica* de la prueba. ¿Cómo se hace esto? determinando para una muestra dada si la muestra está en la región crítica de la prueba, repitiendo el ejercicio en cada iteración de la simulación y al final, calculando la proporción de veces en que la muestra estaba en la región crítica dado que una hipótesis es cierta. Al final, Ud tendrá dos valores para la potencia: uno bajo la hipótesis nula y otro bajo la hipótesis alternativa. 
+
+Su tarea consiste en comparar esos dos escenarios de generación de muestras para la función de potencia: uno en el que se cumplen los supuestos (Tipo de Muestra 1) y una en la que no (Tipo de Muestra 2). Esta comparación se realizará calculando la potencia *empírica* para cada caso y comparándola con la potencia teórica que da la función de R que escribimos al inicio de este texto.
+
+## Código sugerido:
+
+1. Generar los datos
+
+```{r}
+set.seed(16)
+gen_fun <- function(tam_muest=10, 
+                    med_1=4, med_2=3) {
+  # OJO med_1 - med_2 = dif
+  
+  # Cumple con los supuestos:
+  X_0 <- rnorm(tam_muest, 0,1)
+  Y_0 <- rnorm(tam_muest, 0,1)
+  X_a <- rnorm(tam_muest, med_1,1)
+  Y_a <- rnorm(tam_muest, med_2,1)
+  dif_null <- mean(X_0)-mean(Y_0)
+  dif_alt <- mean(X_a)-mean(Y_a)
+  
+  # NO Cumple con los supuestos:
+  # Aquí Uds pueden moficar, voy a dar un ejemplo 
+  # QUE NO PUEDEN USAR porque no tiene sentido.
+  
+  # No cumple con los supuestos:
+  X_0 <- rnorm(tam_muest, 0,1)
+  Y_0 <- rnorm(tam_muest+4, 0,1)
+  X_a <- rnorm(tam_muest, med_1,1)
+  Y_a <- rnorm(tam_muest+4, med_2,1)
+  dif_null_no <- mean(X_0)-mean(Y_0)
+  dif_alt_no <- mean(X_a)-mean(Y_a)
+  return(c(dif_null=dif_null, 
+           dif_alt=dif_alt,
+           dif_null_no=dif_null_no, 
+           dif_alt_no=dif_alt_no))
+}
+data <- replicate(n = 1000,gen_fun(), simplify = FALSE )
+```
+
+Ahora que tenemos una lista con 1000 conjuntos de datos distintos (todos de la misma distribución), vamos a calcular la potencia empírica de cada caso:
+
+```{r}
+library(purrr) 
+
+cal_fun <- function(dat,n=10,alpha=0.05) {
+  # ¿está la muestra en la RC?
+  # valor crítico: z*(sqrt(2/n))
+  # como fijamos alpha, entonces 
+  
+   crit <- qnorm(1-alpha/2)*sqrt(2/n)
+   pot_null<-abs(dat[1]) > abs(crit)
+   pot_alt<-abs(dat[2]) > abs(crit)
+   pot_null_no<-abs(dat[3]) > abs(crit)
+   pot_alt_no<-abs(dat[4]) > abs(crit)
+  return(c(crit, pot_null, pot_alt, 
+           pot_null_no, pot_alt_no))
+}
+
+results <- map(data, cal_fun)
+```
+
+## Potencia empírica:
+
+```{r}
+apply(do.call(rbind,results),2,sum)/1000
+```
+
+## Su trabajo consiste en llevar a cabo los siguientes puntos:
+
+1. Redacte de manera clara y concisa el objetivo del estudio de Monte Carlo, definiendo matemáticamente la función de potencia y el contraste $\delta$ que quiere comparar. Además, describa los dos escenarios de generación de datos matemáticamente, fije el tamaño de muestra, el tamaño del contraste y explique por qué es necesario generar datos bajo las dos hipótesis. (10pts)
+
+2. Presente los resultados de la simulación (tal como está planteada) en una tabla resumida, incluyendo medidas de variabilidad para cada estimación que esté haciendo. (10pts). NOTA: Ud puede modificar la simulación, sin embargo, lo que pide esta pregunta es que utilice el código que ya está escrito para tratar de responder (al menos uno de) sus objetivos. 
+
+3. Compare la potencia teórica con la empírica en cada caso. ¿Por qué difieren los resultados del tamaño de contraste teórico y de la potencia empírica cuando se asume la hipótesis nula como cierta? ¿Por qué la potencia teórica cuando la diferencia es igual a la hipótesis alternativa fijada y la potencia empírica difieren? ¿Era el resultado que Ud esperaba y por qué? (20pts)
+
+4. Describa brevemente cómo diseñaría una simulación que elabore de una manera más completa (con más evidencia) su respuesta anterior (no hace falta llevarla a cabo, solo tiene que describir cómo la haría). (10pts)
+
+TOTAL: 50 puntos, NOTA: 5$\%$
+
+## Recomendaciones para la entrega:
+
+a. Solo debe entregar las respuestas a las preguntas 1,2,3, y 4. El formato recomendado para la elaboración es .Rmd, pero se acepta cualquier otro formato de elaboración siempre y cuando el resultado (entregable) sea un archivo .pdf y este sea LEGIBLE. Además, si su respuesta no es clara y no hay evidencia de cómo lo hizo (o no es comprensible), no podemos darle puntos parciales. 
+
+b. Recuerde que Ud está entregando un reporte con un mensaje, asegúrese de dejar claro ese mensaje y responder la pregunta de su objetivo utilizando tablas y/o gráficos según vea necesario.
+
+c. Puede adjuntar el código que utilizó como anexo (este paso es recomendado, para asegurar reproducibilidad y transparencia). 
+
+d. El trabajo en equipo es recomendable, sin embargo, Ud debe demostrar su contribución en sus respuestas. Esto quiere decir que NO pueden haber respuestas exactamente iguales, si esto pasa, entonces las dos personas involucradas tendrán un cero, sin excepción.
+
+e. La fecha de entrega es el sábado 1 de junio a las 12 medio día vía Mediación Virtual. No se aceptarán trabajos por correo electrónico, ni por cualquier otro medio. El viernes 31 de mayo **NO** hay lecciones, ya que se espera que Ud dedique a este proyecto por lo menos 8 horas de trabajo. 
+
