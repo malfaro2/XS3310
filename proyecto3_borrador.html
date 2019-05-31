@@ -191,7 +191,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Proyecto 3</h1>
 <h4 class="author">XS3310 - Marcela Alfaro Córdoba</h4>
-<h4 class="date">5/31/2019 (updated: 2019-05-29)</h4>
+<h4 class="date">5/31/2019 (updated: 2019-05-31)</h4>
 
 </div>
 
@@ -286,7 +286,7 @@ plot(x,potencia(100,0.04,x), type='l',
 </tr>
 </tbody>
 </table>
-<p>Ud va a escoger la opción en donde se cumplen los supuestos (tipo de muestra 1) y una opción más de esa tabla (o las que quiera) y la va a llamar tipo de muestra 2. Así, Ud generará dos escenarios, que implican cuatro conjuntos de muestras, fijando la hipótesis alternativa como simple (por ejemplo (<span class="math inline">\(\mu_1 - \mu_2 = 3\)</span>)):</p>
+<p>Ud va a escoger la opción en donde se cumplen los supuestos (tipo de muestra 1) y una opción más de esa tabla (o las que quiera) y la va a llamar tipo de muestra 2. Así, Ud generará dos escenarios cada uno con dos conjuntos de muestras: 1) asumiendo la hipótesis nula que es cierta y 2) asumiendo una hipótesis alternativa cierta (debe ser simple por ejemplo: (<span class="math inline">\(\mu_1 - \mu_2 = 3\)</span>). Es decir al final contará con 4 conjuntos de muestras:</p>
 <p>Escenario 1:</p>
 <ul>
 <li>Tipo de Muestra 1, asumiendo que la hipótesis nula es cierta</li>
@@ -295,7 +295,7 @@ plot(x,potencia(100,0.04,x), type='l',
 <p>Escenario 2:</p>
 <ul>
 <li>Tipo de Muestra 2, asumiendo que la hipótesis nula es cierta</li>
-<li>Tipo de Muestra 2, asumiendo que una hipótesis alternativa es</li>
+<li>Tipo de Muestra 2, asumiendo que una hipótesis alternativa es cierta.</li>
 </ul>
 <p>Ahora bien, si Ud fija el contraste que quiere evaluar (<span class="math inline">\(\delta\)</span> especificado anteriormente) y el tamaño de contraste (<span class="math inline">\(\alpha_c\)</span>), Ud puede calcular la potencia <em>empírica</em> de la prueba. ¿Cómo se hace esto? determinando para una muestra dada si la muestra está en la región crítica de la prueba, repitiendo el ejercicio en cada iteración de la simulación y al final, calculando la proporción de veces en que la muestra estaba en la región crítica dado que una hipótesis es cierta. Al final, Ud tendrá dos valores para la potencia: uno bajo la hipótesis nula y otro bajo la hipótesis alternativa.</p>
 <p>Su tarea consiste en comparar esos dos escenarios de generación de muestras para la función de potencia: uno en el que se cumplen los supuestos (Tipo de Muestra 1) y una en la que no (Tipo de Muestra 2). Esta comparación se realizará calculando la potencia <em>empírica</em> para cada caso y comparándola con la potencia teórica que da la función de R que escribimos al inicio de este texto.</p>
@@ -303,39 +303,38 @@ plot(x,potencia(100,0.04,x), type='l',
 <div id="codigo-sugerido" class="section level2">
 <h2>Código sugerido:</h2>
 <ol style="list-style-type: decimal">
-<li>Generar los datos</li>
+<li>Generar los datos: esta es una función de ejemplo, Ud debe modificarla de acuerdo a la opción de Tipo de Muestra 2 que escogió.</li>
 </ol>
 <pre class="r"><code>set.seed(16)
 gen_fun &lt;- function(tam_muest=10, 
                     med_1=4, med_2=3) {
   # OJO med_1 - med_2 = dif
   
-  # Cumple con los supuestos:
+  # Tipo de Muestra 1:
   X_0 &lt;- rnorm(tam_muest, 0,1)
   Y_0 &lt;- rnorm(tam_muest, 0,1)
   X_a &lt;- rnorm(tam_muest, med_1,1)
   Y_a &lt;- rnorm(tam_muest, med_2,1)
-  dif_null &lt;- mean(X_0)-mean(Y_0)
-  dif_alt &lt;- mean(X_a)-mean(Y_a)
+  dif_null1 &lt;- mean(X_0)-mean(Y_0)
+  dif_alt1 &lt;- mean(X_a)-mean(Y_a)
   
-  # NO Cumple con los supuestos:
+  # Tipo de Muestra 2:
   # Aquí Uds pueden moficar, voy a dar un ejemplo 
   # QUE NO PUEDEN USAR porque no tiene sentido.
   
-  # No cumple con los supuestos:
   X_0 &lt;- rnorm(tam_muest, 0,1)
   Y_0 &lt;- rnorm(tam_muest+4, 0,1)
   X_a &lt;- rnorm(tam_muest, med_1,1)
   Y_a &lt;- rnorm(tam_muest+4, med_2,1)
-  dif_null_no &lt;- mean(X_0)-mean(Y_0)
-  dif_alt_no &lt;- mean(X_a)-mean(Y_a)
-  return(c(dif_null=dif_null, 
-           dif_alt=dif_alt,
-           dif_null_no=dif_null_no, 
-           dif_alt_no=dif_alt_no))
+  dif_null2 &lt;- mean(X_0)-mean(Y_0)
+  dif_alt2 &lt;- mean(X_a)-mean(Y_a)
+  return(c(dif_null=dif_null1, 
+           dif_alt=dif_alt1,
+           dif_null_no=dif_null2, 
+           dif_alt_no=dif_alt2))
 }
 data &lt;- replicate(n = 1000,gen_fun(), simplify = FALSE )</code></pre>
-<p>Ahora que tenemos una lista con 1000 conjuntos de datos distintos (todos de la misma distribución), vamos a calcular la potencia empírica de cada caso:</p>
+<p>Ahora que tenemos una lista con 1000 conjuntos de datos distintos (todos de la respectiva distribución), vamos a calcular la potencia empírica de cada caso:</p>
 <pre class="r"><code>library(purrr) 
 
 cal_fun &lt;- function(dat,n=10,alpha=0.05) {
@@ -363,9 +362,9 @@ results &lt;- map(data, cal_fun)</code></pre>
 <div id="su-trabajo-consiste-en-llevar-a-cabo-los-siguientes-puntos" class="section level2">
 <h2>Su trabajo consiste en llevar a cabo los siguientes puntos:</h2>
 <ol style="list-style-type: decimal">
-<li><p>Redacte de manera clara y concisa el objetivo del estudio de Monte Carlo, definiendo matemáticamente la función de potencia y el contraste <span class="math inline">\(\delta\)</span> que quiere comparar. Además, describa los dos escenarios de generación de datos matemáticamente, fije el tamaño de muestra, el tamaño del contraste y explique por qué es necesario generar datos bajo las dos hipótesis. (10pts)</p></li>
-<li><p>Presente los resultados de la simulación (tal como está planteada) en una tabla resumida, incluyendo medidas de variabilidad para cada estimación que esté haciendo. (10pts). NOTA: Ud puede modificar la simulación, sin embargo, lo que pide esta pregunta es que utilice el código que ya está escrito para tratar de responder (al menos uno de) sus objetivos.</p></li>
-<li><p>Compare la potencia teórica con la empírica en cada caso. ¿Por qué difieren los resultados del tamaño de contraste teórico y de la potencia empírica cuando se asume la hipótesis nula como cierta? ¿Por qué la potencia teórica cuando la diferencia es igual a la hipótesis alternativa fijada y la potencia empírica difieren? ¿Era el resultado que Ud esperaba y por qué? (20pts)</p></li>
+<li><p>Redacte de manera clara y concisa el objetivo del estudio de Monte Carlo, definiendo matemáticamente la función de potencia y el contraste <span class="math inline">\(\delta\)</span> que quiere comparar. Además, describa los dos escenarios de generación de datos matemáticamente, fije el tamaño de muestra, el tamaño del contraste y explique por qué es necesario generar datos bajo las dos hipótesis. NOTA: En este caso y a diferencia de los otros proyectos, Ud SI debe modificar el código que ya está escrito para tratar de responder (al menos uno de) sus objetivos. (10pts)</p></li>
+<li><p>Presente los resultados de la simulación (tal como está planteada) en una tabla resumida, incluyendo medidas de variabilidad para cada estimación que esté haciendo. (10pts).</p></li>
+<li><p>Compare la potencia teórica con la empírica en cada caso. ¿Por qué difieren los resultados del tamaño de contraste teórico y de la potencia empírica cuando se asume la hipótesis nula como cierta? ¿Por qué difieren los resultados de la potencia teórica cuando la diferencia es igual a la hipótesis alternativa fijada y de la potencia empírica bajo ese mismo supuesto? ¿Era el resultado que Ud esperaba y por qué? Por favor responda todas las preguntas. (20pts)</p></li>
 <li><p>Describa brevemente cómo diseñaría una simulación que elabore de una manera más completa (con más evidencia) su respuesta anterior (no hace falta llevarla a cabo, solo tiene que describir cómo la haría). (10pts)</p></li>
 </ol>
 <p>TOTAL: 50 puntos, NOTA: 5<span class="math inline">\(\%\)</span></p>
