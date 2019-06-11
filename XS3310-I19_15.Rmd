@@ -384,11 +384,11 @@ A diferencia de la hipótesis general que vimos antes, en este caso la hipótesi
 Como las medias son distintas y necesitamos generar datos asumiendo que la hipótesis nula es cierta, entonces podemos hacer una pequeña transformación a los datos originales (para poder generar datos bajo el supuesto de que la hipótesis nula es cierta):
 
 $$\tilde{X}_i = X_i - \bar{X} + \bar{Z}$$
-$$\tilde{X}_i = X_i - \bar{X} + \bar{Z}$$
+$$\tilde{Y}_i = Y_i - \bar{Y} + \bar{Z}$$
 
 donde:
 
-$$\bar{Z} = \frac{1}{n_X = n_Y} [\sum_{i=1}^{n_X}X_i + \sum_{i=1}^{n_Y}Y_i]$$.
+$$\bar{Z} = \frac{1}{n_X + n_Y} [\sum_{i=1}^{n_X}X_i + \sum_{i=1}^{n_Y}Y_i]$$.
 
 Ahora, con esa transformación, la distribución empírica de las dos variables transformadas tendrá iguales medias y por ende, satisface la condición de que la hipótesis nula es verdadera. 
 
@@ -399,7 +399,7 @@ Ahora, con esa transformación, la distribución empírica de las dos variables 
 1. Remuestree $X_1^{*(b)}, \dots X_{n_X}^{*(b)}$ independientemente de $\tilde{X}$.
 2. Remuestree $Y_1^{*(b)}, \dots Y_{n_X}^{*(b)}$ independientemente de $\tilde{Y}$.
 3. Evalúe las iteraciones de bootstrap:
-$$T^{*(b)}=\frac{X^{*(b)}-Y^{*(b)}}{\sqrt{\frac{s^2_{X^{*(b)}}}{n_X}+\frac{s^2_{Y^{*(b)}}}{n_Y}}}$$
+$$T^{*(b)}=\frac{\bar{X}^{*(b)}-\bar{Y}^{*(b)}}{\sqrt{\frac{s^2_{X^{*(b)}}}{n_X}+\frac{s^2_{Y^{*(b)}}}{n_Y}}}$$
 4. Estime el valor de p:
 $$\hat{P}(T\geq t)= \frac{1}{B}\sum_{b=1}^{B}1{\{T^{*(b)}\geq t \}}$$
 
